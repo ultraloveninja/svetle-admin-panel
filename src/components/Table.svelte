@@ -1,12 +1,26 @@
 <script>
   import Table from "sveltestrap/src/Table.svelte";
+  import { onMount } from "svelte";
 
-  const tableHeading = ["#", "First Name", "Last-Name", "Username"];
-  const tableData = [
-    { SNo: "1", firstName: "Mark", lastName: "Otto", userName: "@mdo" },
-    { SNo: "2", firstName: "Jacob", lastName: "Thornton", userName: "@fat" },
-    { SNo: "3", firstName: "Larry", lastName: "the Bird", userName: "@twitter" }
-  ];
+  let users = [];
+
+  onMount(async () => {
+    const res = await fetch(`https://jsonplaceholder.typicode.com/users`);
+    users = await res.json();
+
+    console.log(users);
+  });
+
+  const tableHeading = ["ID", "Name", "Username", "email"];
+
+  // const tableHeading = ["#", "First Name", "Last-Name", "Username"];
+  // const tableData = [
+  //   { SNo: "1", firstName: "Mark", lastName: "Otto", userName: "@mdo" },
+  //   { SNo: "2", firstName: "Jacob", lastName: "Thornton", userName: "@fat" },
+  //   { SNo: "3", firstName: "Larry", lastName: "the Bird", userName: "@twitter" }
+  // ];
+
+  
 </script>
 
 <Table bordered responsive>
@@ -19,13 +33,16 @@
   </thead>
   <tbody>
 
-    {#each tableData as data}
+    {#each users as user}
       <tr>
-        <th scope="row">{data.SNo}</th>
-        <td>{data.firstName}</td>
-        <td>{data.lastName}</td>
-        <td>{data.userName}</td>
+        <th scope="row">{user.id}</th>
+        <td>{user.name}</td>
+        <td>{user.username}</td>
+        <td>{user.email}</td>
       </tr>
+      {:else}
+      <!-- this block renders when users.length === 0 -->
+       <p>loading...</p>
     {/each}
   </tbody>
 </Table>
